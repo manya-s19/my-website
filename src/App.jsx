@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Projects from "./Components/Projects";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
