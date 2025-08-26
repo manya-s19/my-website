@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Sheet Music Player</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .upload-area {
+            border: 3px dashed #fff;
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .upload-area.dragover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffeb3b;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+        
+        .demo-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .play-button {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            font-size: 18px;
+            padding: 20px 40px;
+        }
+        
+        .stop-button {
+            background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+        }
+        
+        .status {
+            margin: 20px 0;
+            font-size: 1.1em;
+            min-height: 30px;
+        }
+        
+        .music-notes {
+            font-size: 2em;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .explanation {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .step-number {
+            background: #ff6b6b;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎼 Magic Sheet Music Player 🎵</h1>
+        <p class="subtitle">Upload sheet music and hear it come to life!</p>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()" 
+             ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+            <div class="upload-icon">📄</div>
+            <h3>Drop your sheet music here or click to upload!</h3>
+            <p>We accept images (PNG, JPG) and PDFs</p>
+            <input type="file" id="fileInput" accept="image/*,.pdf" onchange="handleFileSelect(event)">
+        </div>
+        
+        <img id="preview" style="display: none;" alt="Uploaded sheet music">
+        
+        <div class="demo-section">
+            <h3>🎹 Try Our Demo Songs First!</h3>
+            <p>Don't have sheet music? Try these sample melodies:</p>
+            
+            <div class="demo-buttons">
+                <button onclick="playTwinkleTwinkle()">⭐ Twinkle Twinkle</button>
+                <button onclick="playMaryHadALamb()">🐑 Mary Had a Little Lamb</button>
+                <button onclick="playHappyBirthday()">🎂 Happy Birthday</button>
+                <button onclick="playRandomMelody()">🎲 Random Melody</button>
+            </div>
+            
+            <button class="stop-button" onclick="stopMusic()">⏹️ Stop Music</button>
+        </div>
+        
+        <div class="status" id="status">Ready to make music! 🎵</div>
+        <div class="music-notes" id="notes" style="display: none;">♪ ♫ ♪ ♫</div>
+        
+        <div class="explanation">
+            <h3>🧠 How This Magic Works (Simple Version):</h3>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>You Upload:</strong> You give us a picture of sheet music (like a photo of piano notes)
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Computer Looks:</strong> Our smart computer looks at the dots and lines and says "Oh! That's a C note! That's a D note!"
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Computer Remembers:</strong> It remembers all the notes in the right order
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Computer Plays:</strong> It plays the notes back to you using magical computer sounds!
+            </div>
+            
+            <p><strong>Right now:</strong> This is a simple demo! The real version would be much smarter at reading your sheet music. For now, try our demo songs above! 🎶</p>
+        </div>
+    </div>
+
+    <script>
+        let synth;
+        let isPlaying = false;
+        let currentSequence;
+        
+        // Initialize audio context
+        async function initAudio() {
+            if (!synth) {
+                synth = new Tone.Synth().toDestination();
+                await Tone.start();
+            }
+        }
+        
+        // Demo songs (note sequences)
+        const songs = {
+            twinkle: [
+                {note: 'C4', duration: '4n'},
+                {note: 'C4', duration: '4n'},
+                {note: 'G4', duration: '4n'},
+                {note: 'G4', duration: '4n'},
+                {note: 'A4', duration: '4n'},
+                {note: 'A4', duration: '4n'},
+                {note: 'G4', duration: '2n'},
+                {note: 'F4', duration: '4n'},
+                {note: 'F4', duration: '4n'},
+                {note: 'E4', duration: '4n'},
+                {note: 'E4', duration: '4n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'C4', duration: '2n'}
+            ],
+            mary: [
+                {note: 'E4', duration: '4n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'C4', duration: '4n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'E4', duration: '4n'},
+                {note: 'E4', duration: '4n'},
+                {note: 'E4', duration: '2n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'D4', duration: '2n'},
+                {note: 'E4', duration: '4n'},
+                {note: 'G4', duration: '4n'},
+                {note: 'G4', duration: '2n'}
+            ],
+            birthday: [
+                {note: 'C4', duration: '8n'},
+                {note: 'C4', duration: '8n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'C4', duration: '4n'},
+                {note: 'F4', duration: '4n'},
+                {note: 'E4', duration: '2n'},
+                {note: 'C4', duration: '8n'},
+                {note: 'C4', duration: '8n'},
+                {note: 'D4', duration: '4n'},
+                {note: 'C4', duration: '4n'},
+                {note: 'G4', duration: '4n'},
+                {note: 'F4', duration: '2n'}
+            ]
+        };
+        
+        async function playSong(songData, title) {
+            await initAudio();
+            if (isPlaying) return;
+            
+            isPlaying = true;
+            document.getElementById('status').textContent = `🎵 Playing: ${title}`;
+            document.getElementById('notes').style.display = 'block';
+            
+            let time = Tone.now();
+            songData.forEach((note, index) => {
+                synth.triggerAttackRelease(note.note, note.duration, time);
+                time += Tone.Time(note.duration).toSeconds();
+            });
+            
+            // Stop after song finishes
+            setTimeout(() => {
+                if (isPlaying) {
+                    stopMusic();
+                }
+            }, time * 1000 - Tone.now() * 1000 + 1000);
+        }
+        
+        async function playTwinkleTwinkle() {
+            await playSong(songs.twinkle, "Twinkle Twinkle Little Star");
+        }
+        
+        async function playMaryHadALamb() {
+            await playSong(songs.mary, "Mary Had a Little Lamb");
+        }
+        
+        async function playHappyBirthday() {
+            await playSong(songs.birthday, "Happy Birthday");
+        }
+        
+        async function playRandomMelody() {
+            await initAudio();
+            if (isPlaying) return;
+            
+            const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+            const randomSong = [];
+            
+            for (let i = 0; i < 8; i++) {
+                randomSong.push({
+                    note: notes[Math.floor(Math.random() * notes.length)],
+                    duration: '4n'
+                });
+            }
+            
+            await playSong(randomSong, "Random Melody");
+        }
+        
+        function stopMusic() {
+            isPlaying = false;
+            if (synth) {
+                synth.triggerRelease();
+            }
+            document.getElementById('status').textContent = 'Ready to make music! 🎵';
+            document.getElementById('notes').style.display = 'none';
+        }
+        
+        // File handling functions
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+        
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+        
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+        
+        function handleFile(file) {
+            const preview = document.getElementById('preview');
+            
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('status').textContent = '📸 Image uploaded! In a real system, this would be analyzed for musical notes. Try our demo songs above!';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('status').textContent = '📄 File uploaded! In a real system, this would be converted and analyzed. Try our demo songs above!';
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
