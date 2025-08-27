@@ -1,207 +1,115 @@
-import { useEffect, useState } from "react";
-import Projects from "./Components/Projects";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Logo from "./assets/logo.png"; // place your uploaded logo in src/assets
 
-function App() {
-  const [scrolled, setScrolled] = useState(false);
-
-  // Scroll shadow effect
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+export default function App() {
   return (
-    <div className="font-sans text-gray-800">
-      {/* Navbar */}
-      <nav
-        className={`fixed top-0 left-0 w-full z-50 bg-white transition-shadow duration-300 ${
-          scrolled ? "shadow-md" : "shadow-none"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-4">
-          <h1 className="text-xl font-bold">Manya</h1>
-          <ul className="flex space-x-6 font-medium">
-            <li>
-              <a href="#hero" className="hover:text-blue-500 transition-colors">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#about" className="hover:text-blue-500 transition-colors">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="#projects" className="hover:text-blue-500 transition-colors">
-                Projects
-              </a>
-            </li>
-            <li>
-              <a href="#contact" className="hover:text-blue-500 transition-colors">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
+    <div>
       {/* Hero Section */}
-      <section
-        id="hero"
-        className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-100 pt-20"
-      >
-        <div className="text-center">
-          <h1 className="text-5xl font-extrabold mb-4">Hi, I'm Manya 👋</h1>
-          <p className="text-xl text-gray-600 max-w-xl mx-auto">
-            I build cool projects with code and design experiences people enjoy.
-          </p>
-        </div>
+      <section className="bg-[#f8f5ec] min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <img src={Logo} alt="Block by Block Tutoring Logo" className="w-40 mb-6" />
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-blockPink">
+          Block by Block Tutoring
+        </h1>
+        <p className="text-lg md:text-xl max-w-2xl text-gray-700 mb-6">
+          Building confidence and knowledge, one block at a time. Personalized tutoring to help students excel in math, science, and beyond.
+        </p>
+        <a
+          href="#contact"
+          className="bg-blockBlue text-white px-6 py-3 rounded-2xl text-lg shadow-lg hover:bg-blockGreen transition"
+        >
+          Book a Free Consultation
+        </a>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-32 bg-white">
-        <div className="max-w-4xl mx-auto text-center px-6">
-          <h2 className="text-4xl font-bold mb-6">About Me</h2>
-          <p className="text-lg text-gray-600">
-            I'm passionate about technology, design, and solving problems with
-            creative solutions. This portfolio is where I share my journey and
-            showcase projects I'm proud of.
-          </p>
+      <section className="py-20 bg-white px-6">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-3xl font-bold text-blockGold mb-4">Why Choose Us?</h2>
+            <p className="text-gray-700 mb-4">
+              At Block by Block Tutoring, we believe learning should be engaging, empowering, 
+              and tailored to each student’s needs. Our tutors use proven strategies 
+              to make challenging subjects easier to understand.
+            </p>
+            <ul className="list-disc list-inside text-gray-700 space-y-2">
+              <li>Customized learning plans</li>
+              <li>Flexible scheduling options</li>
+              <li>Experienced and friendly tutors</li>
+              <li>Support across math, science, and more</li>
+            </ul>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <img
+              src="https://images.unsplash.com/photo-1588075592446-265fd1e6e76d"
+              alt="Tutoring session"
+              className="rounded-2xl shadow-lg"
+            />
+          </motion.div>
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-32 bg-gray-50 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">My Stuff</h2>
-          <div className="relative">
-            <div className="flex animate-scroll space-x-8">
-        
-        {/* Project One */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://aws.amazon.com/blogs/business-intelligence/amazon-quicksight-partners-with-stanfords-shtem-internship-to-empower-students-in-generative-ai-and-research/", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">AWS QuickSight Project</h3>
-          <p className="text-gray-600 mb-4">
-            Stanford SHTEM internship project empowering students in Gen AI & research.
-          </p>
-          <div className="text-blue-500 font-medium">View Project →</div>
-        </div>
-
-        {/* Project Two */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">Portfolio Website</h3>
-          <p className="text-gray-600 mb-4">
-            This responsive portfolio built with React and modern design principles.
-          </p>
-          <div className="text-blue-500 font-medium">View Code →</div>
-        </div>
-
-        {/* Project Three */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">React Todo App</h3>
-          <p className="text-gray-600 mb-4">
-            A sleek task management app with drag-and-drop functionality and local storage.
-          </p>
-          <div className="text-blue-500 font-medium">View Demo →</div>
-        </div>
-
-        {/* Project Four */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">Weather Dashboard</h3>
-          <p className="text-gray-600 mb-4">
-            Real-time weather app with beautiful animations and location-based forecasts.
-          </p>
-          <div className="text-blue-500 font-medium">View Live →</div>
-        </div>
-
-        {/* Project Five */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">E-commerce Site</h3>
-          <p className="text-gray-600 mb-4">
-            Full-stack shopping platform with payment integration and admin dashboard.
-          </p>
-          <div className="text-blue-500 font-medium">View Store →</div>
-        </div>
-
-        {/* Duplication for safety */}
-        {/* Project One Again */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://aws.amazon.com/blogs/business-intelligence/amazon-quicksight-partners-with-stanfords-shtem-internship-to-empower-students-in-generative-ai-and-research/", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">AWS QuickSight Project</h3>
-          <p className="text-gray-600 mb-4">
-            Stanford SHTEM internship project empowering students in Gen AI & research.
-          </p>
-          <div className="text-blue-500 font-medium">View Project →</div>
-        </div>
-
-        {/* Project Two Again */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">Portfolio Website</h3>
-          <p className="text-gray-600 mb-4">
-            This responsive portfolio built with React and modern design principles.
-          </p>
-          <div className="text-blue-500 font-medium">View Code →</div>
-        </div>
-
-        {/* Project Three Again*/}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">React Todo App</h3>
-          <p className="text-gray-600 mb-4">
-            A sleek task management app with drag-and-drop functionality and local storage.
-          </p>
-          <div className="text-blue-500 font-medium">View Demo →</div>
-        </div>
-
-        {/* Project Four Again*/}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">Weather Dashboard</h3>
-          <p className="text-gray-600 mb-4">
-            Real-time weather app with beautiful animations and location-based forecasts.
-          </p>
-          <div className="text-blue-500 font-medium">View Live →</div>
-        </div>
-
-        {/* Project Five Again */}
-        <div className="flex-shrink-0 w-96 p-6 bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
-             onClick={() => window.open("https://github.com", '_blank', 'noopener,noreferrer')}>
-          <h3 className="text-2xl font-semibold mb-2">E-commerce Site</h3>
-          <p className="text-gray-600 mb-4">
-            Full-stack shopping platform with payment integration and admin dashboard.
-          </p>
-          <div className="text-blue-500 font-medium">View Store →</div>
-        </div>
-
-            </div>
+      {/* Services Section */}
+      <section className="py-20 bg-[#f8f5ec] px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-blockPink mb-8">Our Services</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: "Math Tutoring", desc: "From fractions to calculus, we make math approachable." },
+              { title: "Science Support", desc: "Physics, Chemistry, Biology – we break it down step by step." },
+              { title: "Study Skills", desc: "Time management, note-taking, and exam prep strategies." },
+            ].map((service, idx) => (
+              <div key={idx} className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition">
+                <h3 className="text-xl font-semibold text-blockBlue mb-2">{service.title}</h3>
+                <p className="text-gray-600">{service.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-32 bg-white">
-        <div className="max-w-3xl mx-auto text-center px-6">
-          <h2 className="text-4xl font-bold mb-6">Get In Touch</h2>
-          <p className="text-lg text-gray-600 mb-6">
-            Whether you want to collaborate, ask a question, or just say hi,
-            feel free to reach out!
+      <section id="contact" className="py-20 bg-white px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-blockGreen mb-6">Get in Touch</h2>
+          <p className="mb-6 text-gray-700">
+            Ready to start your learning journey? Book a free consultation today!
           </p>
-          <a
-            href="mailto:manya@egmail.com"
-            className="inline-block bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors"
-          >
-            Say Hello
-          </a>
+          <form className="space-y-4">
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="w-full p-3 border border-gray-300 rounded-xl"
+            />
+            <input
+              type="email"
+              placeholder="Your Email"
+              className="w-full p-3 border border-gray-300 rounded-xl"
+            />
+            <textarea
+              placeholder="Your Message"
+              className="w-full p-3 border border-gray-300 rounded-xl"
+              rows="4"
+            />
+            <button
+              type="submit"
+              className="bg-blockGold text-white px-6 py-3 rounded-2xl text-lg shadow-lg hover:bg-blockPink transition"
+            >
+              Send Message
+            </button>
+          </form>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-blockBlue text-white text-center py-6">
+        <p>&copy; {new Date().getFullYear()} Block by Block Tutoring. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
-
-export default App;

@@ -1,27 +1,8 @@
-html {
-  scroll-behavior: smooth;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-scroll {
-  display: flex;
-  width: max-content;
-  animation: scroll 20s linear infinite;
-  animation-delay: -7s;
-}
-
-.animate-scroll:hover {
-  animation-play-state: paused;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-[#f8f5ec] text-gray-900;
+  font-family: 'Inter', sans-serif;
+}
